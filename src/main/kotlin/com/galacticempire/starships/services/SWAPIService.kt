@@ -3,6 +3,7 @@ package com.galacticempire.starships.services
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.galacticempire.starships.services.deserialization.BigIntegerDeserializer
 import org.springframework.http.MediaType
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
 import java.math.BigInteger
@@ -21,12 +22,16 @@ data class SWAPIStarshipEntity(
     // TODO: Add all other fields
 )
 
+@Component
 class SWAPIService {
-
     private val restClient = RestClient.create()
+    private val listOfSpaceships = mutableListOf<SWAPIStarshipEntity>()
 
     fun getAllStarships(): List<SWAPIStarshipEntity> {
-        val listOfSpaceships = mutableListOf<SWAPIStarshipEntity>()
+        if(listOfSpaceships.isNotEmpty()) {
+            return listOfSpaceships
+        }
+
         var nextUri: String? = "https://swapi.dev/api/starships"
 
         do {
